@@ -19,3 +19,5 @@ After these, they will be encoded as a simple binary tree, in which a `-` refers
  - `-..-...-` : `11101110`
 
 So our tree will have a max depth of 8.
+
+This system works because we can analyse the bit to work out the least number of swaps necessary, start on either a null byte or max byte, and only swap the necessary sections.
