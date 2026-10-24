@@ -1,6 +1,6 @@
 #include "Reciever.h"
-#include <alsa/asoundlib.h>
-#include <ostream>
+#include <cstdlib>
+#include <unistd.h>
 
 int main(int argc, char **argv){
     long loops;
@@ -12,7 +12,7 @@ int main(int argc, char **argv){
     int dir;
     snd_pcm_uframes_t frames; // number of frames per period
     
-    void* buffer[256]; // buffer
+    short buffer[256]; // buffer
 
     rc = snd_pcm_open(&handle, "default", SND_PCM_STREAM_CAPTURE, 0);
 
@@ -27,7 +27,7 @@ int main(int argc, char **argv){
     snd_pcm_hw_params_any(handle, params);
     // Interleaved mode - makes it so that audio channels are provided in a single sequence as opposed to seperately
     snd_pcm_hw_params_set_access(handle, params, SND_PCM_ACCESS_RW_INTERLEAVED);
-    // Signed 16-bit little-endian format
+    // Signed 16-bit (2-byte) little-endian format
     snd_pcm_hw_params_set_format(handle, params, SND_PCM_FORMAT_S16_LE);
     // Mono channel (1 channel)
     snd_pcm_hw_params_set_channels(handle, params, 1);
@@ -46,22 +46,42 @@ int main(int argc, char **argv){
     }
 
     snd_pcm_hw_params_get_period_size(params, &frames, &dir);
-    size = frames * 2; // 2 bytes per sample so obv gotta double size
+    size = frames * 2; // 2 bytes per sample so gotta double size
 
     std::cout << "Listening??" << std::endl;
 
+
+    std::thread w(micCapture, rc, handle, buffer);
+    std::thread r(audioAnalysis, rc, handle, buffer);
+    r.join();
+    w.join();
+
+}
+
+void audioAnalysis(int rc, snd_pcm_t* handle, short buffer[256]){
     while(true){
-        rc = snd_pcm_readi(handle, buffer, size);
-        if (rc == -EPIPE) {
-            // End Pipe - Overrun occurred
-            std::cerr << "Overrun occurred!" << std::endl;
-            snd_pcm_prepare(handle);
-        } else if (rc < 0) {
-            std::cerr << "Error from read: " << snd_strerror(rc) << std::endl;
-        } else if (rc != (int)frames) {
-            // short reads are reads where there is not sufficient space in the buffer.
-            std::cerr << "Short read, read " << rc << " frames" << std::endl;
+        if(abs((float)(buffer[0]) / 32767) > 1){
+            std::cout << "peaked" << std::endl;
+            std::cout << "waiting" << std::endl;
+            usleep(500000);
+            std::cout << "done waiting" << std::endl;
         }
     }
+}
 
+void micCapture(int rc, snd_pcm_t* handle, short buffer[256]){
+    while(true){
+            if ((rc = snd_pcm_readi(handle, buffer, 2)) != 2) {
+                fprintf (stderr, "read from audio interface failed (%s)\n",
+                        snd_strerror (rc));
+            }
+        }
+}
+
+
+void endPeak(short buffer[256], int waitus, bool* b){
+    std::cout << "waiting" << std::endl;
+    usleep(waitus);
+    *b = false;
+    std::cout << "done waiting" << std::endl;
 }
