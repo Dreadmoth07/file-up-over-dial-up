@@ -6,7 +6,7 @@
 
 
 #define BUFFER_LEN 256
-#define TONE_TIMER 150000
+#define TONE_TIMER 75000
 
 void audioAnalysis(int rc, snd_pcm_t* handle, short buffer[256]);
 void micCapture(int rc, snd_pcm_t* handle, short buffer[256]);

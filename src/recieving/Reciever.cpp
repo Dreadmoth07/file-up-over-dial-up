@@ -58,18 +58,26 @@ int main(int argc, char **argv){
 
 void audioAnalysis(int rc, snd_pcm_t* handle, short buffer[BUFFER_LEN]){
     bool peaked = false;
+    int i = 0;
     while(true){
-        if(abs((float)(buffer[0]) / 32767) > 1){
+        if(abs((float)(buffer[0]) / 32767) > 0.95 || abs((float)(buffer[BUFFER_LEN / 2]) / 32767) > 0.95){
             usleep(TONE_TIMER);
             peaked = true;
         }
 
         if(peaked){
-            std::cout << "peaked" << std::endl;
+            std::cout << "1";
             peaked = false;
         }
         else{
-            
+            std::cout << "0";
+            usleep(TONE_TIMER);
+        }
+
+        i++;
+        if(i>=8){ // flush buffer every byte
+            std::cout << std::endl;
+            i=0;
         }
     }
 }
