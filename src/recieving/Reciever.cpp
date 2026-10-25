@@ -57,6 +57,11 @@ int main(int argc, char **argv){
 }
 
 void audioAnalysis(int rc, snd_pcm_t* handle, short buffer[BUFFER_LEN]){
+    FILE *fptr;
+    char fileName[] = "binary";
+    fptr = fopen(fileName, "w");
+    if (fptr == NULL)  printf("Failed to create file\n");
+
     bool peaked = false;
     int i = 0;
     while(true){
@@ -67,10 +72,12 @@ void audioAnalysis(int rc, snd_pcm_t* handle, short buffer[BUFFER_LEN]){
 
         if(peaked){
             std::cout << "1";
+            fputc('1', fptr);
             peaked = false;
         }
         else{
             std::cout << "0";
+            fputc('0', fptr);
             usleep(TONE_TIMER);
         }
 
@@ -78,8 +85,10 @@ void audioAnalysis(int rc, snd_pcm_t* handle, short buffer[BUFFER_LEN]){
         if(i>=8){ // flush buffer every byte
             std::cout << std::endl;
             i=0;
+            fflush(fptr);
         }
     }
+
 }
 
 void micCapture(int rc, snd_pcm_t* handle, short buffer[BUFFER_LEN]){
