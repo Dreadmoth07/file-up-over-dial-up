@@ -11,11 +11,12 @@ void ServeRequest(){
     std::cout << "Got request" << std::endl;
     // get the actual request
     FILE* f = fopen("request","r");
-    char c = fgetc(f);
-    while(c != EOF){ // move pointer to where the file path THEORETICALLY starts
-        if(c == '/'){
+    char c = fgetc(f), tmp='0';
+    while(c != EOF){ // move pointer to where the file name THEORETICALLY starts
+        if(tmp == ':' && c == ' '){
             break;
         }
+        tmp = c;
         c = fgetc(f);
     }
     
@@ -24,6 +25,7 @@ void ServeRequest(){
     while(c!=' ' && c !=EOF){
         fpBuffer[i] = c;
         i++;
+        c = fgetc(f);
     }
 
     fpBuffer[i] = '\0'; // end file path buffer
