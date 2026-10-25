@@ -1,7 +1,7 @@
 #include "client.h"
 #include <cstdio>
 
-void constructRequest(const char* filepath){
+void constructRequest(char* filepath){
     FILE* r = fopen("./request","w");
 
     fputs("Can I haz: ", r);
@@ -23,9 +23,9 @@ void recieveFile(char* endFileName){
 }
 
 int main(int argc, char** argv){
-    char filepath[] = "/test.txt";
+    char filepath[] = "test.txt";
     constructRequest(filepath);
-    makeRequest();
+    //makeRequest();
 
     recieveFile(filepath);
 }

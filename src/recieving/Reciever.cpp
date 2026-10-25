@@ -1,5 +1,8 @@
 #include "Reciever.h"
 
+
+volatile bool endBool = false;
+
 int reciever(){
     long loops;
     int rc; // read control
@@ -48,12 +51,12 @@ int reciever(){
 
     std::cout << "Listening??" << std::endl;
 
-
     std::thread w(micCapture, rc, handle, buffer);
     std::thread r(audioAnalysis, rc, handle, buffer);
     r.join();
     w.join();
 
+    return 0;
 }
 
 void audioAnalysis(int rc, snd_pcm_t* handle, short buffer[BUFFER_LEN]){
@@ -64,6 +67,7 @@ void audioAnalysis(int rc, snd_pcm_t* handle, short buffer[BUFFER_LEN]){
 
     bool peaked = false;
     int i = 0;
+    int endCount = 0;
     while(true){
         if(abs((float)(buffer[0]) / 32767) > 0.95 || abs((float)(buffer[BUFFER_LEN / 2]) / 32767) > 0.95){
             usleep(TONE_TIMER);
@@ -74,11 +78,13 @@ void audioAnalysis(int rc, snd_pcm_t* handle, short buffer[BUFFER_LEN]){
             std::cout << "1";
             fputc('1', fptr);
             peaked = false;
+            endCount = 0;
         }
         else{
             std::cout << "0";
             fputc('0', fptr);
             usleep(TONE_TIMER);
+            endCount++;
         }
 
         i++;
@@ -86,9 +92,11 @@ void audioAnalysis(int rc, snd_pcm_t* handle, short buffer[BUFFER_LEN]){
             std::cout << std::endl;
             i=0;
             fflush(fptr);
+            if (endCount >= 32) break;
         }
     }
-
+    fclose(fptr);
+    endBool = true;
 }
 
 void micCapture(int rc, snd_pcm_t* handle, short buffer[BUFFER_LEN]){
@@ -97,13 +105,6 @@ void micCapture(int rc, snd_pcm_t* handle, short buffer[BUFFER_LEN]){
                 fprintf (stderr, "read from audio interface failed (%s)\n",
                         snd_strerror (rc));
             }
+            if (endBool) break;
         }
-}
-
-
-void endPeak(short buffer[BUFFER_LEN], int waitus, bool* b){
-    std::cout << "waiting" << std::endl;
-    usleep(waitus);
-    *b = false;
-    std::cout << "done waiting" << std::endl;
 }
