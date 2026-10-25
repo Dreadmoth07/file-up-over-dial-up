@@ -20,6 +20,7 @@ void ServeRequest(){
         c = fgetc(f);
     }
     
+    c = fgetc(f);
     int i=0;
     char fpBuffer[BUFFER_LEN];
     while(c!=' ' && c !=EOF){
@@ -31,6 +32,7 @@ void ServeRequest(){
     fpBuffer[i] = '\0'; // end file path buffer
 
     std::cout << fpBuffer << std::endl;
+    fclose(f);
 
     fileToBeep(fpBuffer); // beep the file
 
