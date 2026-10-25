@@ -10,9 +10,9 @@ FUNCTIONALITY:
 """
 
 class lineTransferObject():
-    # INPUTS: bool is device establishing the connection? If so, has to listen and accept the other one 
-    def __init__(self, establisher):
-        HOST = "0.0.0.0" # Binds to all IPv4 interfaces the pi's connected to - so the ethernet
+    # INPUTS: name of device (XBOX or PS2), bool is device establishing the connection? If so, has to listen and accept the other one
+    def __init__(self, device, establisher):
+        HOST = "192.168.137.74" if device == "XBOX" else "192.168.137.1"
         PORT = 50007              # Arbitrary non-privileged port
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         print(f"Created socket on {HOST}")
@@ -26,6 +26,7 @@ class lineTransferObject():
         else:
             print("Attempting to connect to other device (establisher)")
             self.s.connect((HOST, PORT))
+            print("Connected!")
 
     # Send data across ethernet cable
     # INPUTS: int[] packet of bits to send
@@ -61,9 +62,10 @@ class lineTransferObject():
 
 # The first device to be executed is the establisher.
 # It establishes the connection, and accepts the other device's connect() request
-if input() != "":
-    with lineTransferObject(True) as l:
+device = input("Is this XBOX or PS2?")
+if input("Press enter for reciever") != "":
+    with lineTransferObject(device, True) as l:
         pass
 else:
-    with lineTransferObject(False) as l:
+    with lineTransferObject(device, False) as l:
         pass
