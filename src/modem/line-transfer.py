@@ -23,24 +23,30 @@ class lineTransferObject():
         if establisher:
             print("Attempting to accept other device")
             self.s.listen(1)
-            conn, addr = self.s.accept()
+            self.conn, addr = self.s.accept()
             print('Connected by', addr)
         else:
             print("Attempting to connect to other device (establisher)")
             self.s.connect((OTHER_HOST, PORT))
             print("Connected!")
+            self.conn = None
 
     # Send data across ethernet cable
     # INPUTS: int[] packet of bits to send
     # OUTPUT: bits places on ethernet cable over time
-    def send():
+    def send(self, bytes):
+        self.conn.sendall(bytes) if self.conn != None else self.s.sendall(bytes)
         pass
 
     # Recieve and return data sent across ethernet cable
     # INPUTS: bit stream from ethernet cable
     # RETURNS: int[] bits recieved
-    def recieve():
-        pass
+    def recieve(self):
+        while True:
+            data = self.conn.recv(1024) if self.conn != None else self.s.recv(1024)
+            if not data: continue
+            print(data)
+            return
 
     # Listen to ethernet cable for a short while, to see if data will be sent 
     # INPUTS: bit stream from ethernet cable
@@ -67,7 +73,7 @@ class lineTransferObject():
 device = input("Is this XBOX or PS2?")
 if input("Press enter for reciever") != "":
     with lineTransferObject(device, True) as l:
-        pass
+        l.recieve()
 else:
     with lineTransferObject(device, False) as l:
-        pass
+        l.send(b"hello world!")
