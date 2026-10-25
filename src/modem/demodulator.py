@@ -18,9 +18,8 @@ class demodulator:
 
     # Plays the input array of bytes over the buzzer. Each bit lasts 0.15s
     def demodulate(self, byteArray):
-        for byte in byteArray:
-            byteAsInt = int.from_bytes(byte, byteorder="big")
-            byte = bin(byteAsInt)[2:]
+        for byte in byteArray: # type(byte) = int
+            byte = bin(byte)[2:]
             byte = "0"*(8-len(byte)) + byte # Add leading zeros
             print(byte)
             for bit in byte:
@@ -40,8 +39,10 @@ class demodulator:
         GPIO.output(self.OUTPUT_PIN, False)
         sleep(0.15)
 
-d = demodulator()
-#d._write_low()
-#while True:
-#    d._write_high()
-d.demodulate([int.to_bytes(45)])
+# Test output
+def __main__():
+    d = demodulator()
+    d.demodulate([int.to_bytes(45)])
+
+if __name__ == "__main__":
+    __main__()
