@@ -1,6 +1,4 @@
 #include "Reciever.h"
-#include <cstdlib>
-#include <unistd.h>
 
 int main(int argc, char **argv){
     long loops;
@@ -12,7 +10,7 @@ int main(int argc, char **argv){
     int dir;
     snd_pcm_uframes_t frames; // number of frames per period
     
-    short buffer[256]; // buffer
+    short buffer[BUFFER_LEN]; // buffer
 
     rc = snd_pcm_open(&handle, "default", SND_PCM_STREAM_CAPTURE, 0);
 
@@ -58,18 +56,25 @@ int main(int argc, char **argv){
 
 }
 
-void audioAnalysis(int rc, snd_pcm_t* handle, short buffer[256]){
+void audioAnalysis(int rc, snd_pcm_t* handle, short buffer[BUFFER_LEN]){
+    bool peaked = false;
     while(true){
         if(abs((float)(buffer[0]) / 32767) > 1){
+            usleep(TONE_TIMER);
+            peaked = true;
+        }
+
+        if(peaked){
             std::cout << "peaked" << std::endl;
-            std::cout << "waiting" << std::endl;
-            usleep(500000);
-            std::cout << "done waiting" << std::endl;
+            peaked = false;
+        }
+        else{
+            
         }
     }
 }
 
-void micCapture(int rc, snd_pcm_t* handle, short buffer[256]){
+void micCapture(int rc, snd_pcm_t* handle, short buffer[BUFFER_LEN]){
     while(true){
             if ((rc = snd_pcm_readi(handle, buffer, 2)) != 2) {
                 fprintf (stderr, "read from audio interface failed (%s)\n",
@@ -79,7 +84,7 @@ void micCapture(int rc, snd_pcm_t* handle, short buffer[256]){
 }
 
 
-void endPeak(short buffer[256], int waitus, bool* b){
+void endPeak(short buffer[BUFFER_LEN], int waitus, bool* b){
     std::cout << "waiting" << std::endl;
     usleep(waitus);
     *b = false;
