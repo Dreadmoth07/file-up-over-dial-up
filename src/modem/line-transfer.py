@@ -51,8 +51,29 @@ class lineTransferObject():
     # Listen to ethernet cable for a short while, to see if data will be sent 
     # INPUTS: bit stream from ethernet cable
     # Returns: True if ethernet cable is sending data, False if not 
-    def listen():
-        pass
+    def listen(self):
+        try:
+            data = self.conn.recv(1024, socket.MSG_PEEK | socket.MSG_DONTWAIT) if self.conn != None else self.s.recv(1024, socket.MSG_PEEK | socket.MSG_DONTWAIT)
+            return True if data else False
+        except BlockingIOError: # No data to read, so return false
+            return False
+
+    def main(self):
+        while True:
+            mode = input("Read or write?")
+            if mode == "r":
+                print("Reading!")
+                for i in range(999999):
+                    listenedData = self.listen()
+                    if listenedData == True:
+                        data = self.recieve()
+                        if data != None: print(data)
+                print("Done reading!")
+            else:
+                print("Writing!")
+                self.send(input("Enter message: ").encode())
+                print("Done writing!")
+
 
     def close(self):
         if self.s is not None:
@@ -73,7 +94,7 @@ class lineTransferObject():
 device = input("Is this XBOX or PS2?")
 if input("Press enter for reciever") != "":
     with lineTransferObject(device, True) as l:
-        l.recieve()
+        l.main()
 else:
     with lineTransferObject(device, False) as l:
-        l.send(b"hello world!")
+        l.main()
