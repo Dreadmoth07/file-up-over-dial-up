@@ -13,9 +13,11 @@ class lineTransferObject():
     # INPUTS: name of device (XBOX or PS2), bool is device establishing the connection? If so, has to listen and accept the other one
     def __init__(self, device, establisher):
         HOST = "192.168.137.74" if device == "XBOX" else "192.168.137.1"
+        OTHER_HOST = "192.168.137.1" if device == "XBOX" else "192.168.137.74"
         PORT = 50007              # Arbitrary non-privileged port
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         print(f"Created socket on {HOST}")
+        self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.s.bind((HOST, PORT))
         print("Bound socket")
         if establisher:
@@ -25,7 +27,7 @@ class lineTransferObject():
             print('Connected by', addr)
         else:
             print("Attempting to connect to other device (establisher)")
-            self.s.connect((HOST, PORT))
+            self.s.connect((OTHER_HOST, PORT))
             print("Connected!")
 
     # Send data across ethernet cable
