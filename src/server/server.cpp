@@ -2,8 +2,8 @@
 #include <cstdio>
 
 void ServeRequest(){
+    std::cout << "getting binary" << std::endl;
     reciever(); // takes in mic input and turns it into a binary file.
-    std::cout << "Got binary" << std::endl;
     char rq[] = "request";
 
     binaryToFile(rq); // convert binary file into readable ascii
@@ -35,5 +35,5 @@ void ServeRequest(){
 }
 
 int main(int argc, char** argv){
-    void ServeRequest();
+    ServeRequest();
 }
