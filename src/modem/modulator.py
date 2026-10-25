@@ -10,7 +10,7 @@ DATA:
 
 FUNCTIONALITY:
 - listen: Reads GPIO_IN and returns True if pin is high
-- read: Reads GPIO_IN every 0.075 seconds and returns the result as a byte string. Read until 4 null bytes.
+- receive: Reads GPIO_IN every 0.075 seconds and returns the result as a byte string. Read until 4 null bytes.
 """
 class modulator:
     def __init__(self):
@@ -23,7 +23,7 @@ class modulator:
 
     # Read GPIO_IN every 0.075s. Return the results of each read as a btye string
     # Continue until 4 null bytes.
-    def read(self):
+    def receive(self):
         byteArray = []
         nullCounter = 0
         while nullCounter < 4:
@@ -37,7 +37,7 @@ class modulator:
                     nullCounter = 0
             byteArray.append(byteValue)
 
-        return byteArray
+        return bytes(byteArray)
 
 def __main__():
     m = modulator()
