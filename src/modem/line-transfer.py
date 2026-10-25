@@ -11,11 +11,11 @@ FUNCTIONALITY:
 
 class lineTransferObject():
     # INPUTS: str ip address the device (XBOX or PS2)
-    def __init__(self, addr):
-        HOST = addr 
+    def __init__(self):
+        HOST = "0.0.0.0" # Binds to all IPv4 interfaces the pi's connected to - so the ethernet
         PORT = 50007              # Arbitrary non-privileged port
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        print("Created socket")
+        print(f"Created socket on {HOST}")
         s.bind((HOST, PORT))
         print("Bound socket")
         s.close()
@@ -41,4 +41,4 @@ class lineTransferObject():
     def listen():
         pass
 
-l = lineTransferObject("localhost")
+l = lineTransferObject()
