@@ -11,11 +11,13 @@ with lineTransfer.lineTransferObject("PS2", True) as l:
         # Check socket stream
         if l.listen() == True:
             # If data, read it and demodulate it
+            print("Reading socket!")
             data = l.receive()
             demod.demodulate(data)
         # Check modulator stream
         if mod.listen() == True:
             # If high, modulate signal and send it over socket
+            print("Reading modulator!")
             data = mod.receive()
             l.send(data)
    # # Keep listening until data found
