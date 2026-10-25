@@ -46,7 +46,7 @@ class lineTransferObject():
             data = self.conn.recv(1024) if self.conn != None else self.s.recv(1024)
             if not data: continue
             print(data)
-            return
+            return data
 
     # Listen to ethernet cable for a short while, to see if data will be sent 
     # INPUTS: bit stream from ethernet cable
