@@ -11,4 +11,4 @@
 void audioAnalysis(int rc, snd_pcm_t* handle, short buffer[256]);
 void micCapture(int rc, snd_pcm_t* handle, short buffer[256]);
 
-void endPeak(short buffer[256], int waitus, bool* b);
+int reciever();
