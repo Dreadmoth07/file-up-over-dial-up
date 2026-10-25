@@ -1,4 +1,4 @@
-#include "Reciever.h"
+#include "../recieving/Reciever.h"
 #include "../recieving/binaryToFile.cpp"
 #include "../translation/fileToBeep.cpp" // god I hate Dylan's lack of header files
 

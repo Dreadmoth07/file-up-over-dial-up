@@ -25,7 +25,7 @@ void recieveFile(char* endFileName){
 int main(int argc, char** argv){
     char filepath[] = "test.txt";
     constructRequest(filepath);
-    //makeRequest();
+    makeRequest();
 
     recieveFile(filepath);
 }
