@@ -91,10 +91,14 @@ class lineTransferObject():
 
 # The first device to be executed is the establisher.
 # It establishes the connection, and accepts the other device's connect() request
-device = input("Is this XBOX or PS2?")
-if input("Press enter for reciever") != "":
-    with lineTransferObject(device, True) as l:
-        l.main()
-else:
-    with lineTransferObject(device, False) as l:
-        l.main()
+def __main__():
+    device = input("Is this XBOX or PS2?")
+    if input("Press enter for reciever") != "":
+        with lineTransferObject(device, True) as l:
+            l.main()
+    else:
+        with lineTransferObject(device, False) as l:
+            l.main()
+
+if __name__ == "__main__":
+    __main__()
