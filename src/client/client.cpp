@@ -11,21 +11,18 @@ void constructRequest(const char* filepath){
     fclose(r);
 }
 
-
 void makeRequest(){
-    char request[] = "./request";
-    fileToBeep(request);
+    fileToBeep("./request");
 }
 
-void recieveFile(char* endFileName){
+void recieveFile(const char* endFileName){
     reciever();
     binaryToFile(endFileName);
 }
 
 int main(int argc, char** argv){
-    char filepath[] = "/test.txt";
-    constructRequest(filepath);
+    constructRequest("/test.txt");
     makeRequest();
 
-    recieveFile(filepath);
+    recieveFile("test.txt");
 }

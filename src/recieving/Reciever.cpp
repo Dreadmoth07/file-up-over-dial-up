@@ -1,6 +1,6 @@
 #include "Reciever.h"
 
-int reciever(){
+int main(int argc, char **argv){
     long loops;
     int rc; // read control
     int size;
