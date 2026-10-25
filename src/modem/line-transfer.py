@@ -40,8 +40,8 @@ class lineTransferObject():
 
     # Recieve and return data sent across ethernet cable
     # INPUTS: bit stream from ethernet cable
-    # RETURNS: int[] bits recieved
-    def recieve(self):
+    # RETURNS: int[] bits received
+    def receive(self):
         while True:
             data = self.conn.recv(1024) if self.conn != None else self.s.recv(1024)
             if not data: continue
@@ -66,7 +66,7 @@ class lineTransferObject():
                 for i in range(999999):
                     listenedData = self.listen()
                     if listenedData == True:
-                        data = self.recieve()
+                        data = self.receive()
                         if data != None: print(data)
                 print("Done reading!")
             else:
@@ -93,7 +93,7 @@ class lineTransferObject():
 # It establishes the connection, and accepts the other device's connect() request
 def __main__():
     device = input("Is this XBOX or PS2?")
-    if input("Press enter for reciever") != "":
+    if input("Press enter for receiver") != "":
         with lineTransferObject(device, True) as l:
             l.main()
     else:
