@@ -8,9 +8,7 @@ char binaryToText(char *string){
 
 void textToFile(char *string, FILE *fptr){
     char character;
-
     character = binaryToText(string);
-    printf("%c\n", character);
     fputc(character, fptr);
 }
 
@@ -18,31 +16,18 @@ void binaryToFile(char *fileName, char *string){
     char inpFile[] = "binary";
     FILE *sfptr;    // source file pointer
     FILE *ofptr;    // output file pointer
-    bool run = true;
-    char character[8]; 
+    char character[9]; 
 
     ofptr = fopen(fileName, "w");
     sfptr = fopen(inpFile, "r");
 
     if (ofptr == NULL)  printf("Failed to create file\n");
     else{
-        while (run){
-            for(int i = 0; i != 8; i++){
-                character[7-i] = (char)string++;
-            }
-            textToFile(character, ofptr);
+        char data[9];
+        while (fgets(data, 9, sfptr) != NULL){
+            textToFile(data, ofptr);
         }
         fclose(ofptr);
         fclose(sfptr);
     }
-}
-
-
-int main(){
-    char test[] = "01001000";
-    char fileName[] = "testFile";
-    
-    binaryToFile(fileName, test);
-
-    return 0;
 }

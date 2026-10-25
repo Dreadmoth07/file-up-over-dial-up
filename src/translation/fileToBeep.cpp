@@ -49,11 +49,3 @@ void fileToBeep(char *name){
         fclose(fptr);
     }
 }
-
-
-int main(){
-    char test[] = "01001000 01100101 01101100 01101100 01101111 00100000 01110111 01101111 01110010 01101100 01100100\0";
-    char file[] = "testFile";
-    fileToBeep(file);
-    return 0;
-}
