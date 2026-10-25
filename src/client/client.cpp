@@ -1,7 +1,7 @@
 #include "client.h"
 #include <cstdio>
 
-void constructRequest(const char* filepath){
+void constructRequest(char* filepath){
     FILE* r = fopen("./request","w");
 
     fputs("Can I haz: ", r);

@@ -54,6 +54,7 @@ int reciever(){
     r.join();
     w.join();
 
+    return 0;
 }
 
 void audioAnalysis(int rc, snd_pcm_t* handle, short buffer[BUFFER_LEN]){
